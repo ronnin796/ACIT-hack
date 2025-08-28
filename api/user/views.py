@@ -1,8 +1,8 @@
 from django.http import JsonResponse
 from rest_framework import viewsets, permissions , status
 from rest_framework.permissions import AllowAny
-from .serializers import UserSerializer , CollaborationSerializer
-from .models import CustomUser , Collaboration
+from .serializers import UserSerializer 
+from .models import CustomUser 
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
@@ -81,6 +81,3 @@ class UserViewSet(viewsets.ModelViewSet):
 
 
 
-class CollaborationViewSet(viewsets.ModelViewSet):
-    queryset = Collaboration.objects.all().order_by('-created_at')
-    serializer_class = CollaborationSerializer

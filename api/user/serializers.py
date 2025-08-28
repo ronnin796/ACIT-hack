@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.hashers import make_password
 from rest_framework.decorators import authentication_classes , permission_classes 
-from .models import CustomUser , Collaboration
+from .models import CustomUser , InfluencerProfile, BusinessProfile
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):  # Use ModelSerializer unless you need HyperlinkedModelSerializer
     def create(self, validated_data):
@@ -31,10 +31,18 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):  # Use ModelSerial
             'password': {'write_only': True}
         }
 
-    
 
-class CollaborationSerializer(serializers.ModelSerializer):
+
+class InfluencerProfileSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Collaboration
+        model = InfluencerProfile
         fields = '__all__'
+
+class BusinessProfileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = BusinessProfile
+        fields = '__all__'
+
+
+
 
