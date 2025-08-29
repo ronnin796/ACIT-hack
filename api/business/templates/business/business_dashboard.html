@@ -1,0 +1,87 @@
+{% extends "core/base.html" %}
+{% block title %}Business Dashboard{% endblock %}
+{% load custom_tags %}
+{% load dict_filters %}
+
+
+{% block content %}
+<div class="min-h-screen bg-gray-50 p-6">
+
+  <h1 class="text-4xl font-bold text-purple-700 mb-6">Welcome, {{ request.user.name }}</h1>
+
+  <!-- Add Business Profile Button -->
+  <div class="mb-8">
+    <a href="{% url 'business:add_profile' %}" 
+       class="px-6 py-3 bg-purple-600 text-white rounded-full shadow hover:bg-purple-700 transition">
+       + Add Business Profile
+    </a>
+  </div>
+
+  {% for profile in business_profiles %}
+  <div class="mb-10">
+    <!-- Business Profile Card -->
+    <div class="bg-white shadow rounded-xl overflow-hidden hover:shadow-lg transition mb-4">
+      {% if profile.image %}
+        <img src="{{ profile.image.url }}" class="w-full h-40 object-cover">
+      {% else %}
+        <img src="/static/default-business.png" class="w-full h-40 object-cover">
+      {% endif %}
+      <div class="p-4">
+        <h3 class="text-xl font-bold text-purple-700">{{ profile.business_name }}</h3>
+        <p class="text-gray-600">Industry: {{ profile.industry }}</p>
+        <p class="text-gray-600">Budget: ${{ profile.budget }}</p>
+        <p class="text-gray-600">Platforms: {{ profile.target_platforms|join:", " }}</p>
+        <p class="text-gray-600">Location: {{ profile.target_location }}</p>
+      </div>
+    </div>
+
+    <!-- Recommendations for this profile -->
+    <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recommended Influencers</h2>
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+      {% for influencer in recommendations_by_profile|dict_get:profile.id %}
+      <div class="bg-white shadow rounded-xl p-4 hover:shadow-lg transition">
+        {% if influencer.image %}
+          <img src="{{ influencer.image.url }}" class="w-full h-40 object-cover rounded">
+        {% else %}
+          <img src="/static/default-influencer.png" class="w-full h-40 object-cover rounded">
+        {% endif %}
+        <div class="mt-2">
+          <h3 class="font-bold text-purple-700">{{ influencer.user.name }}</h3>
+          <p class="text-gray-600">Niche: {{ influencer.niche }}</p>
+          <p class="text-gray-600">Followers: {{ influencer.followers }}</p>
+          <p class="text-gray-600">Engagement: {{ influencer.engagement_rate }}%</p>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-gray-500">No recommended influencers at the moment.</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% empty %}
+  <p class="text-gray-500">No business profiles found. Add one to get started.</p>
+  {% endfor %}
+
+  <!-- Collaborations -->
+  <h2 class="text-2xl font-semibold text-gray-800 mb-4">Collaborations (Status)</h2>
+  <div class="grid md:grid-cols-2 gap-6">
+    {% for collab in collaborations %}
+    <div class="bg-white shadow rounded-xl p-4 hover:shadow-lg transition">
+      <h3 class="font-semibold text-purple-700">{{ collab.influencer.name }}</h3>
+      <p class="text-gray-600">
+        Status: 
+        {% if collab.status == 'accepted' %}
+          <span class="text-green-600">Accepted</span>
+        {% elif collab.status == 'rejected' %}
+          <span class="text-red-600">Rejected</span>
+        {% else %}
+          <span class="text-yellow-600">Pending</span>
+        {% endif %}
+      </p>
+    </div>
+    {% empty %}
+    <p class="text-gray-500">No collaborations yet.</p>
+    {% endfor %}
+  </div>
+
+</div>
+{% endblock %}

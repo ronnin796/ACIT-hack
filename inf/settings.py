@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'api',
     'api.user',
     'api.collabs',
+    'api.core',
+    'api.business',
     
 
 ]

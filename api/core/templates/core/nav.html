@@ -1,0 +1,58 @@
+<nav class="bg-white/80 backdrop-blur shadow sticky top-0 z-50" x-data="{ open: false }">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16 items-center">
+      <!-- Logo -->
+      <a href="{% url 'home' %}" class="text-2xl font-extrabold text-purple-700 hover:text-indigo-600 transition">
+        InfluenceRadar
+      </a>
+
+      <!-- Desktop Links -->
+      <div class="hidden md:flex space-x-4 items-center font-medium">
+        {% if request.user.is_authenticated %}
+          <a href="{% url 'profile_input' %}" class="text-gray-600 hover:text-purple-700 transition">Dashboard</a>
+          <a href="{% url 'user:signout' request.user.id %}" class="text-gray-600 hover:text-purple-700 transition">Logout</a>
+        {% else %}
+          <a href="{% url 'signin' %}" 
+             class="px-4 py-2 rounded-full border border-purple-600 text-purple-600 hover:bg-purple-50 transition">
+            Login
+          </a>
+          <a href="{% url 'signup' %}" 
+             class="px-4 py-2 rounded-full bg-purple-600 text-white shadow hover:bg-purple-700 transition">
+            Sign Up
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Mobile Hamburger -->
+      <div class="md:hidden flex items-center">
+        <button @click="open = !open" class="text-gray-600 hover:text-purple-700 focus:outline-none">
+          <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path x-show="!open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M4 6h16M4 12h16M4 18h16"/>
+            <path x-show="open" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M6 18L18 6M6 6l12 12"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Menu -->
+  <div x-show="open" x-transition class="md:hidden bg-white shadow">
+    <div class="px-4 py-3 space-y-2">
+      {% if request.user.is_authenticated %}
+        <a href="{% url 'profile_input' %}" class="block px-3 py-2 text-gray-600 hover:text-purple-700 rounded">Dashboard</a>
+        <a href="{% url 'user:signout' request.user.id %}" class="block px-3 py-2 text-gray-600 hover:text-purple-700 rounded">Logout</a>
+      {% else %}
+        <a href="{% url 'signin' %}" 
+           class="block w-full text-center px-4 py-2 rounded-full border border-purple-600 text-purple-600 hover:bg-purple-50 transition">
+          Login
+        </a>
+        <a href="{% url 'signup' %}" 
+           class="block w-full text-center px-4 py-2 rounded-full bg-purple-600 text-white shadow hover:bg-purple-700 transition">
+          Sign Up
+        </a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

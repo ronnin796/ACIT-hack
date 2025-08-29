@@ -1,14 +1,15 @@
 from django.http import JsonResponse
 from rest_framework import viewsets, permissions , status
 from rest_framework.permissions import AllowAny
-from .serializers import UserSerializer 
-from .models import CustomUser 
+from .serializers import UserSerializer , InfluencerProfileSerializer , BusinessProfileSerializer
+from .models import CustomUser , InfluencerProfile , BusinessProfile
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, logout
 import re
 import random
+
 # Create your views here.
 def generate_session_token(length=10):
 
@@ -78,6 +79,19 @@ class UserViewSet(viewsets.ModelViewSet):
         if role:
             queryset = queryset.filter(role=role)
         return queryset     
+    
+class InfluencerProfileViewSet(viewsets.ModelViewSet):
+    queryset = InfluencerProfile.objects.all()
+    serializer_class = InfluencerProfileSerializer
+    
+
+class BusinessProfileViewSet(viewsets.ModelViewSet):
+    queryset = BusinessProfile.objects.all()
+    serializer_class = BusinessProfileSerializer
+    def perform_create(self, serializer):
+        # Automatically set the user to the logged-in user
+        serializer.save(user=self.request.user)
+    
 
 
 

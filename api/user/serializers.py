@@ -38,10 +38,28 @@ class InfluencerProfileSerializer(serializers.ModelSerializer):
         model = InfluencerProfile
         fields = '__all__'
 
+
+from .models import BusinessProfile
+
 class BusinessProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = BusinessProfile
         fields = '__all__'
+        read_only_fields = ('user',)
+
+    def to_internal_value(self, data):
+        data = data.copy()  # make mutable
+
+        # Convert multipart list into actual Python list
+        tp = data.getlist('target_platforms') if hasattr(data, 'getlist') else data.get('target_platforms')
+        if tp:
+            data['target_platforms'] = list(tp) if isinstance(tp, (list, tuple)) else [tp]
+
+        ta = data.getlist('target_age') if hasattr(data, 'getlist') else data.get('target_age')
+        if ta:
+            data['target_age'] = [int(x) for x in ta] if isinstance(ta, (list, tuple)) else [int(ta)]
+
+        return super().to_internal_value(data)
 
 
 
